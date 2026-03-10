@@ -4,59 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Cyclist Balance — Jeu</title>
-  <style>
-  /* ===================== CSS ===================== */
-  :root{
-    --bg1:#78c0ff; /* sky */
-    --bg2:#8fd66b; /* distant hills */
-    --road:#444;
-    --accent:#ffd24d;
-  }
-  html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Arial;background:linear-gradient(180deg,var(--bg1) 0%, #bfe9ff 40%, #fff 100%);overflow:hidden}
-  .game-wrap{display:flex;flex-direction:column;align-items:center;gap:12px;padding:18px;height:100%;box-sizing:border-box}
-
-  header{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:980px}
-  h1{font-size:18px;margin:0;color:#0b3b5a}
-  .hud{display:flex;gap:12px;align-items:center}
-  .score{background:rgba(255,255,255,0.85);padding:8px 12px;border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,0.08)}
-
-  /* play area */
-  .play-area{position:relative;width:100%;max-width:980px;flex:1;display:flex;align-items:flex-end;justify-content:center}
-
-  /* scrolling background layers */
-  .bg-layer{position:absolute;left:0;right:0;top:0;bottom:0;pointer-events:none}
-  .hills{background-image:radial-gradient(circle at 20% 30%, rgba(0,0,0,0.06) 0, transparent 30%), linear-gradient(180deg, rgba(255,255,255,0.06), transparent);background-size:1600px 420px;opacity:0.95}
-  .road{position:absolute;left:0;right:0;height:160px;bottom:0;background:linear-gradient(180deg,#666,#333);border-top-left-radius:40px;border-top-right-radius:40px;overflow:hidden}
-  .road:before{content:'';position:absolute;left:0;right:0;top:24px;height:4px;background:linear-gradient(90deg,rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0.25) 100%);opacity:0.4}
-
-  /* cyclist */
-  .cyclist{position:absolute;left:48px;bottom:54px;display:flex;align-items:center;gap:8px;color:#0b3b5a}
-  .bike{font-size:36px}
-  .cyclist .name{font-size:12px;background:rgba(255,255,255,0.85);padding:6px;border-radius:6px}
-
-  /* balance panel */
-  .balance-panel{position:relative;width:80%;max-width:760px;height:110px;background:linear-gradient(180deg,#f6f6f8,#eef2f6);border-radius:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(11,59,90,0.08);}
-  .bar{position:relative;width:82%;height:18px;background:#ddd;border-radius:12px}
-  .safe{position:absolute;left:50%;transform:translateX(-50%);height:100%;background:linear-gradient(90deg,#a8f5a9,#3cc66f);border-radius:12px;box-shadow:inset 0 1px 0 rgba(255,255,255,0.5)}
-  .indicator{position:absolute;top:-18px;width:0;height:0;border-left:10px solid transparent;border-right:10px solid transparent;border-bottom:18px solid #0b3b5a;transition:left 0.06s linear}
-  .indicator-dot{position:absolute;top:40px;left:50%;transform:translateX(-50%);width:8px;height:8px;background:#0b3b5a;border-radius:50%}
-  .status{position:absolute;right:16px;top:12px;font-size:13px;color:#0b3b5a}
-
-  .controls{display:flex;gap:10px;align-items:center;font-size:13px;color:#0b3b5a}
-  .controls .btn{background:rgba(255,255,255,0.9);padding:6px 8px;border-radius:6px}
-
-  .overlay{position:absolute;left:0;right:0;top:0;bottom:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
-  .message{pointer-events:auto;background:rgba(255,255,255,0.95);padding:20px;border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,0.12);text-align:center}
-  .hidden{display:none}
-
-  /* tiny footer */
-  .footer{font-size:12px;color:#0b3b5a;opacity:0.9}
-
-  @media (max-width:600px){
-    .balance-panel{height:96px}
-    .indicator{border-left:8px solid transparent;border-right:8px solid transparent;border-bottom:16px solid #0b3b5a}
-  }
-  </style>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <!-- ===================== HTML ===================== -->
@@ -72,7 +20,25 @@
     <div class="play-area">
       <div class="bg-layer hills" id="bgHills" style="opacity:0.85"></div>
       <div class="cyclist" id="cyclist">
-        <div class="bike">🚴‍♂️</div>
+        <div class="bike" aria-hidden="true">
+          <!-- Simple SVG cycliste + vélo (vectoriel, scalable) -->
+          <svg width="64" height="48" viewBox="0 0 64 48" xmlns="http://www.w3.org/2000/svg" role="img">
+            <g fill="none" stroke="#0b3b5a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <!-- roues -->
+              <circle cx="16" cy="36" r="8" fill="#0b3b5a10" stroke="#0b3b5a" />
+              <circle cx="48" cy="36" r="8" fill="#0b3b5a10" stroke="#0b3b5a" />
+              <!-- cadre -->
+              <path d="M20 34 L30 26 L38 34" />
+              <path d="M30 26 L38 18" />
+              <path d="M30 26 L24 20" />
+              <!-- guidon et selle -->
+              <path d="M39 17 L45 15" />
+              <path d="M24 20 L20 14" />
+              <!-- cycliste head -->
+              <circle cx="22" cy="10" r="4" fill="#0b3b5a" />
+            </g>
+          </svg>
+        </div>
         <div class="name">Cycliste</div>
       </div>
 
@@ -106,215 +72,6 @@
     <footer class="footer">Contrôles: Appuie rapidement sur A (gauche) et E (droite). Si l'indicateur sort trop longtemps de la zone verte, tu tombes.</footer>
   </div>
 
-  <script>
-  // ===================== JavaScript =====================
-  // Small balance game implementing requested mechanics.
-
-  (function(){
-    const startBtn = document.getElementById('startBtn');
-    const msg = document.getElementById('msg');
-    const msgTitle = document.getElementById('msgTitle');
-    const msgBody = document.getElementById('msgBody');
-    const muteBtn = document.getElementById('muteBtn');
-
-    const scoreEl = document.getElementById('score');
-    const slopeLabel = document.getElementById('slopeLabel');
-    const safeZoneEl = document.getElementById('safeZone');
-    const indicatorEl = document.getElementById('indicator');
-    const bgHills = document.getElementById('bgHills');
-
-    let running = false;
-    let soundOn = true;
-
-    // Game state
-    let indicator = 0; // -1 (left) .. +1 (right)
-    let velocity = 0;   // for smoothing
-    let score = 0; // distance in meters
-    let speed = 40; // meters per second base
-    let elapsed = 0;
-
-    // Outside timer
-    let outsideTime = 0;
-    const allowedOutside = 1.2; // seconds allowed outside safe zone before crash
-
-    // Terrain / slope system
-    const slopes = [
-      {name:'Plat', drift:0.02, safeWidth:0.5, minDuration:6, maxDuration:12, weight:60},
-      {name:'Petite côte', drift:0.05, safeWidth:0.32, minDuration:5, maxDuration:10, weight:30},
-      {name:'Raide', drift:0.12, safeWidth:0.18, minDuration:4, maxDuration:8, weight:10}
-    ];
-
-    let currentSlope = slopes[0];
-    let slopeEndTime = 0;
-
-    // background scroll
-    let bgOffset = 0;
-
-    // Input tracking
-    let inputLeft = 0; // A
-    let inputRight = 0; // E
-
-    // Audio
-    let audioCtx=null;
-    function ensureAudio(){
-      if(!audioCtx){
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      }
-    }
-    function tickSound(vol=0.04){
-      if(!soundOn) return;
-      ensureAudio();
-      const o = audioCtx.createOscillator();
-      const g = audioCtx.createGain();
-      o.type = 'sine';
-      o.frequency.value = 480;
-      g.gain.value = vol;
-      o.connect(g); g.connect(audioCtx.destination);
-      o.start();
-      o.stop(audioCtx.currentTime + 0.06);
-    }
-
-    // Utility: choose next slope with increasing difficulty over time
-    function pickSlope(){
-      const difficulty = Math.min(0.95, score/400); // increases as score grows
-      // adjust weights: favor harder slopes as difficulty grows
-      const weights = slopes.map(s=>{
-        let base = s.weight;
-        if(s.name==='Raide') base += Math.round(difficulty*80);
-        if(s.name==='Petite côte') base += Math.round(difficulty*30);
-        return base;
-      });
-      const total = weights.reduce((a,b)=>a+b,0);
-      let r = Math.random()*total;
-      for(let i=0;i<weights.length;i++){
-        if(r < weights[i]) return slopes[i];
-        r -= weights[i];
-      }
-      return slopes[0];
-    }
-
-    function startGame(){
-      running = true;
-      indicator = 0; velocity = 0; score = 0; elapsed = 0; outsideTime = 0; bgOffset = 0; speed = 40;
-      pickNewSlope(0);
-      lastTime = performance.now();
-      msg.classList.add('hidden');
-      loop(lastTime);
-    }
-
-    function endGame(){
-      running = false;
-      msg.classList.remove('hidden');
-      msgTitle.textContent = 'Crash !';
-      msgBody.innerHTML = `Distance parcourue: <strong>${Math.round(score)} m</strong><br>Appuie sur Démarrer pour recommencer.`;
-      startBtn.textContent = 'Recommencer';
-    }
-
-    function pickNewSlope(now){
-      currentSlope = pickSlope();
-      const dur = currentSlope.minDuration*1000 + Math.random()*(currentSlope.maxDuration-currentSlope.minDuration)*1000;
-      slopeEndTime = now + dur;
-      slopeLabel.textContent = 'Pente: ' + currentSlope.name;
-      // update safe zone width
-      const bar = document.getElementById('bar');
-      const safePct = Math.max(0.08, currentSlope.safeWidth);
-      safeZoneEl.style.width = (safePct*100) + '%';
-    }
-
-    // handle keys
-    window.addEventListener('keydown', (e)=>{
-      if(e.key.toLowerCase() === 'a') { inputLeft = 1; tickSound(0.03); }
-      if(e.key.toLowerCase() === 'e') { inputRight = 1; tickSound(0.03); }
-    });
-    window.addEventListener('keyup', (e)=>{
-      if(e.key.toLowerCase() === 'a') inputLeft = 0;
-      if(e.key.toLowerCase() === 'e') inputRight = 0;
-    });
-
-    // handle start / mute buttons
-    startBtn.addEventListener('click', ()=>{
-      if(!running){ startGame(); }
-    });
-    muteBtn.addEventListener('click', ()=>{
-      soundOn = !soundOn; muteBtn.textContent = soundOn ? 'Désactiver son' : 'Activer son';
-    });
-
-    // Main loop
-    let lastTime = performance.now();
-    function loop(now){
-      if(!running) return;
-      const dt = Math.min(0.05, (now - lastTime)/1000); // cap dt
-      lastTime = now;
-      elapsed += dt;
-
-      // increase speed slightly with time
-      speed += 0.01*dt*speed;
-      score += speed*dt;
-      scoreEl.textContent = `Distance: ${Math.round(score)} m`;
-
-      // slope switching
-      if(now > slopeEndTime){ pickNewSlope(now); }
-
-      // compute input force
-      const inputForce = (inputRight - inputLeft) * 1.2; // pressing adds instantaneous push
-      // slope drift: makes indicator slide (positive drift pushes right)
-      const drift = currentSlope.drift * (currentSlope.name === 'Plat' ? 1 : 1.0) * (1 + Math.sin(elapsed*1.2)*0.1);
-      // combine to velocity
-      velocity += (inputForce - drift * (indicator>0?1:-1)) * dt * 6; // amplify
-      // small friction
-      velocity *= (1 - Math.min(0.12, dt*3));
-      // integrate
-      indicator += velocity * dt;
-      // clamp
-      indicator = Math.max(-1, Math.min(1, indicator));
-
-      // update indicator position in bar (left percent)
-      const barRect = document.getElementById('bar').getBoundingClientRect();
-      const pct = (indicator + 1)/2*100; // 0..100
-      indicatorEl.style.left = pct + '%';
-
-      // update bg scroll to simulate movement. faster when speed higher
-      bgOffset = (bgOffset + dt * (speed/80) * 80) % 1600;
-      bgHills.style.backgroundPosition = `${-bgOffset}px 0px`;
-
-      // safe zone detection
-      const safeRect = safeZoneEl.getBoundingClientRect();
-      const barLeft = barRect.left; const barWidth = barRect.width;
-      const safeLeftPct = ((safeRect.left - barLeft) / barWidth) * 100;
-      const safeRightPct = ((safeRect.right - barLeft) / barWidth) * 100;
-      const posPct = pct;
-      const inside = posPct >= safeLeftPct && posPct <= safeRightPct;
-
-      if(!inside){
-        outsideTime += dt;
-      } else {
-        outsideTime = Math.max(0, outsideTime - dt*1.6); // recover faster when back in safe
-      }
-
-      // fail if outside too long
-      if(outsideTime >= allowedOutside){
-        // crash!
-        indicatorEl.style.transition = 'left 0.2s ease-out';
-        endGame();
-        return;
-      }
-
-      // subtle UI: change safe zone color based on difficulty
-      const colorIntensity = Math.min(1, (1 - currentSlope.safeWidth) + (score/4000));
-      safeZoneEl.style.filter = `hue-rotate(${colorIntensity*30}deg)`;
-
-      // schedule next frame
-      requestAnimationFrame(loop);
-    }
-
-    // show initial message
-    msg.classList.remove('hidden');
-    startBtn.textContent = 'Démarrer';
-    muteBtn.textContent = 'Désactiver son';
-
-    // expose for debugging (optional)
-    window._game = {start:startGame};
-  })();
-  </script>
+  <script src="script.js" defer></script>
 </body>
 </html>
